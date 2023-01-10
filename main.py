@@ -1,4 +1,5 @@
 import requests
+import pandas
 from bs4 import BeautifulSoup
 
 URL = "https://www.waalre.nl/inwoners-en-ondernemers/afvalstoffenheffing.html"
@@ -6,7 +7,9 @@ URL = "https://www.waalre.nl/inwoners-en-ondernemers/afvalstoffenheffing.html"
 data = requests.get(URL,timeout=3).text
 soup = BeautifulSoup(data,"html.parser")
 
+print("")
 print(soup.title.string)
+print("")
 
 for table in soup.find_all('table'):
     header = []
@@ -16,6 +19,5 @@ for table in soup.find_all('table'):
             header = [el.text.strip() for el in row.find_all('th')]
         else:
             rows.append([el.text.strip() for el in row.find_all('td')])
-    print(header)
-    for row in rows:
-        print(row)
+    print(pandas.DataFrame(rows, columns = header))
+    print("")
